@@ -1,0 +1,8 @@
+.{
+    .name = "folderduration",
+    .version = "0.0.0",
+
+    .paths = .{
+        "",
+    },
+}

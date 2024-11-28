@@ -6,6 +6,7 @@ const avformat = @cImport({
 pub fn video_duration(pFormatCtx: [*c][*c]avformat.AVFormatContext, filename: [*c]const u8) f64 {
     if (avformat.avformat_open_input(pFormatCtx, filename, null, null) != 0)
         return 0;
+    _ = avformat.avformat_find_stream_info(pFormatCtx.*,null);
     const duration: f64 = @floatFromInt(pFormatCtx.*.*.duration);
     avformat.avformat_close_input(pFormatCtx);
     return duration / 1000000.0;

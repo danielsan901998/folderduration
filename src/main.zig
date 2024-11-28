@@ -43,7 +43,6 @@ pub fn main() anyerror!void {
         const stat = try std.fs.cwd().statFile(arg);
         const seconds = switch (stat.kind) {
             .file => video_duration(&pFormatCtx, arg),
-            .directory => try folder_duration(alloc, &pFormatCtx, arg),
             else => 0,
         };
         try stdout.print("{s}: {d:.0}:{d:0>2.0}:{d:0>2.0}\n", .{ arg, @divFloor(seconds, 3600), @mod(@divFloor(seconds, 60), 60), @mod(seconds, 60) });

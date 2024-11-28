@@ -6,7 +6,8 @@ const avformat = @cImport({
 pub fn video_duration(pFormatCtx: [*c][*c]avformat.AVFormatContext, filename: [*c]const u8) f64 {
     if (avformat.avformat_open_input(pFormatCtx, filename, null, null) != 0)
         return 0;
-    _ = avformat.avformat_find_stream_info(pFormatCtx.*,null);
+    if (avformat.avformat_find_stream_info(pFormatCtx.*,null) < 0)
+        return 0;
     const duration: f64 = @floatFromInt(pFormatCtx.*.*.duration);
     avformat.avformat_close_input(pFormatCtx);
     return duration / 1000000.0;
@@ -22,7 +23,6 @@ pub fn folder_duration(allocator: std.mem.Allocator, pFormatCtx: [*c][*c]avforma
         defer allocator.free(complete_path);
         switch (entry.kind) {
             .file => seconds += video_duration(pFormatCtx, complete_path),
-            .directory => seconds += try folder_duration(allocator, pFormatCtx, complete_path),
             else => {},
         }
     }

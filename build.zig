@@ -4,9 +4,6 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    // Use translate-c to convert C headers into Zig code
-    const ffmpeg_include_path = "/usr/include/x86_64-linux-gnu";
-
     // Create a minimal C stub that includes the FFmpeg header
     const c_stub = b.path("src/avformat_stub.c");
 
@@ -16,12 +13,7 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
         .link_libc = true,
     });
-    translate_c.addSystemIncludePath(.{
-        .src_path = .{
-            .owner = b,
-            .sub_path = ffmpeg_include_path,
-        },
-    });
+
     translate_c.linkSystemLibrary("avformat", .{});
     translate_c.linkSystemLibrary("avutil", .{});
 
